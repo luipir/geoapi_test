@@ -17,64 +17,93 @@
     "description" : "Simple RESTful service of geo data"
   } ],
   "tags" : [ {
-    "name" : "admins",
-    "description" : "Secured Admin-only calls"
+    "name" : "crud",
+    "description" : "Api to manage resource CRUD"
   }, {
-    "name" : "developers",
-    "description" : "Operations available to regular developers"
+    "name" : "search",
+    "description" : "Api to manage resources search"
   } ],
   "paths" : {
-    "/inventory" : {
+    "/areas" : {
       "get" : {
-        "tags" : [ "developers" ],
-        "summary" : "searches inventory",
-        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
-        "operationId" : "searchInventory",
+        "tags" : [ "search" ],
+        "summary" : "Retrieve collection of Area basing on search query parameters",
+        "description" : "Search for Area resources basing on query paramters\n",
+        "operationId" : "searchAreas",
         "parameters" : [ {
-          "name" : "searchString",
+          "name" : "name",
           "in" : "query",
-          "description" : "pass an optional search string for looking up inventory",
+          "description" : "Get all resources containing the name",
           "required" : false,
           "style" : "form",
           "explode" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "example" : "look_for_this_name"
           }
         }, {
-          "name" : "skip",
+          "name" : "date",
           "in" : "query",
-          "description" : "number of records to skip for pagination",
+          "description" : "Get all resources containing the name",
           "required" : false,
           "style" : "form",
           "explode" : true,
           "schema" : {
-            "minimum" : 0,
-            "type" : "integer",
-            "format" : "int32"
+            "type" : "string",
+            "format" : "date",
+            "example" : "2021-04-17"
           }
         }, {
-          "name" : "limit",
+          "name" : "properties",
           "in" : "query",
-          "description" : "maximum number of records to return",
+          "description" : "Get all resources mathing property dictionary",
           "required" : false,
           "style" : "form",
           "explode" : true,
           "schema" : {
-            "maximum" : 50,
-            "minimum" : 0,
-            "type" : "integer",
-            "format" : "int32"
+            "type" : "object",
+            "additionalProperties" : { },
+            "example" : {
+              "en" : "Hello!",
+              "fr" : "Bonjour!"
+            }
+          }
+        }, {
+          "name" : "intersect",
+          "in" : "query",
+          "description" : "Get all resources intersecting query Area and ordered from larget to smallest",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/Area"
+            }
+          }
+        }, {
+          "name" : "intersection",
+          "in" : "query",
+          "description" : "Get all resources intersection with query Area. No order is espected",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/Area"
+            }
           }
         } ],
         "responses" : {
           "200" : {
-            "description" : "search results matching criteria",
+            "description" : "search results matching query",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "$ref" : "#/components/schemas/InventoryItem"
+                    "$ref" : "#/components/schemas/Area"
                   }
                 }
               }
@@ -82,33 +111,99 @@
           },
           "400" : {
             "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "No resources found"
           }
         }
       },
       "post" : {
-        "tags" : [ "admins" ],
-        "summary" : "adds an inventory item",
-        "description" : "Adds an item to the system",
-        "operationId" : "addInventory",
+        "tags" : [ "crud" ],
+        "summary" : "Add new/modify Area resource",
+        "description" : "Add a new Area resource or modify existing if unique name already exist\n",
+        "operationId" : "addArea",
         "requestBody" : {
-          "description" : "Inventory item to add",
+          "description" : "Area resource to add/substitute",
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/InventoryItem"
+                "$ref" : "#/components/schemas/Area"
               }
             }
           }
         },
         "responses" : {
-          "201" : {
-            "description" : "item created"
+          "204" : {
+            "description" : "The resource was created/substited successfully."
+          }
+        }
+      }
+    },
+    "/areas/{name}" : {
+      "get" : {
+        "tags" : [ "crud" ],
+        "summary" : "Retrieve a Area resource by unique name.",
+        "description" : "Retrieve a Area resource by unique name.\n",
+        "operationId" : "getAreaByName",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "description" : "resource unique name",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search result by unique name.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "maxItems" : 1,
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Area"
+                  }
+                }
+              }
+            }
           },
           "400" : {
-            "description" : "invalid input, object invalid"
+            "description" : "bad input parameter"
           },
-          "409" : {
-            "description" : "an existing item already exists"
+          "404" : {
+            "description" : "No resource found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "search" ],
+        "summary" : "Delete a Area resource by name.",
+        "description" : "Delete a Area resource by name.\n",
+        "operationId" : "deleteAreByName",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "description" : "resource unique name",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "The resource was deleted successfully."
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "No resource found"
           }
         }
       }
@@ -116,47 +211,65 @@
   },
   "components" : {
     "schemas" : {
-      "InventoryItem" : {
-        "required" : [ "id", "manufacturer", "name", "releaseDate" ],
+      "Area" : {
+        "required" : [ "area", "date", "name", "properties" ],
         "type" : "object",
         "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "uuid",
-            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          },
           "name" : {
             "type" : "string",
-            "example" : "Widget Adapter"
+            "example" : "Luigi Pirelli"
           },
-          "releaseDate" : {
+          "date" : {
             "type" : "string",
-            "format" : "date-time",
-            "example" : "2016-08-29T09:12:33.001Z"
+            "format" : "date",
+            "example" : "2021-04-17"
           },
-          "manufacturer" : {
-            "$ref" : "#/components/schemas/Manufacturer"
+          "properties" : {
+            "type" : "object",
+            "additionalProperties" : { },
+            "example" : {
+              "en" : "Hello!",
+              "fr" : "Bonjour!"
+            }
+          },
+          "area" : {
+            "$ref" : "#/components/schemas/Polygon"
           }
         }
       },
-      "Manufacturer" : {
-        "required" : [ "name" ],
+      "Point" : {
         "type" : "object",
         "properties" : {
-          "name" : {
-            "type" : "string",
-            "example" : "ACME Corporation"
+          "longitude" : {
+            "type" : "number",
+            "format" : "double",
+            "example" : -8.226312
           },
-          "homePage" : {
-            "type" : "string",
-            "format" : "url",
-            "example" : "https://www.acme-corp.com"
+          "latitude" : {
+            "type" : "number",
+            "format" : "double",
+            "example" : 43.29702
           },
-          "phone" : {
-            "type" : "string",
-            "example" : "408-867-5309"
+          "height" : {
+            "type" : "number",
+            "format" : "double",
+            "example" : 77
           }
-        }
+        },
+        "description" : "WGS-84 longitude-latitude and height above sea-level"
+      },
+      "Polygon" : {
+        "type" : "object",
+        "properties" : {
+          "points" : {
+            "minItems" : 3,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Point"
+            }
+          }
+        },
+        "description" : "A list of points representing a closed shape . the First point is connected to the last to close the shape. a shape must contain at least three points."
       }
     }
   }
