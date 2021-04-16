@@ -216,10 +216,8 @@
           },
           "properties" : {
             "type" : "object",
-            "additionalProperties" : true,
-            "example" : {
-              "en" : "Hello!",
-              "fr" : "Bonjour!"
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/Props"
             }
           },
           "area" : {
