@@ -57,11 +57,25 @@
           "schema" : {
             "type" : "object",
             "additionalProperties" : {
-              "type" : "string"
+              "string_value" : {
+                "type" : "string",
+                "description" : "a generic string value in the dictionary"
+              },
+              "integer_value" : {
+                "type" : "integer",
+                "description" : "a generic integer value in the dictionary"
+              },
+              "date_value" : {
+                "type" : "string",
+                "format" : "date",
+                "example" : "2021-04-17",
+                "description" : "a generic integer value in the dictionary"
+              }
             },
             "example" : {
-              "en" : "Hello!",
-              "fr" : "Bonjour!"
+              "this_is_string" : "Hello!",
+              "this_is_a_date" : "2011/04/17",
+              "this_is_integer" : 111
             }
           }
         }, {
