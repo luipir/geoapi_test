@@ -246,6 +246,7 @@
       "Polygon" : {
         "description" : "A list of points representing a closed shape . the First point is connected to the last to close the shape. a shape must contain at least three points.",
         "type" : "object",
+        "maxItems" : 1,
         "properties" : {
           "points" : {
             "type" : "array",
