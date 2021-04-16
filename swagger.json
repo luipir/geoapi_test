@@ -58,23 +58,14 @@
             "type" : "object",
             "additionalProperties" : {
               "string_value" : {
-                "type" : "string",
-                "description" : "a generic string value in the dictionary"
+                "type" : "string"
               },
               "integer_value" : {
-                "type" : "integer",
-                "description" : "a generic integer value in the dictionary"
-              },
-              "date_value" : {
-                "type" : "string",
-                "format" : "date",
-                "example" : "2021-04-17",
-                "description" : "a generic integer value in the dictionary"
+                "type" : "integer"
               }
             },
             "example" : {
               "this_is_string" : "Hello!",
-              "this_is_a_date" : "2011/04/17",
               "this_is_integer" : 111
             }
           }
