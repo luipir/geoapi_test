@@ -189,12 +189,7 @@
       "Props" : {
         "type" : "object",
         "properties" : {
-          "code" : {
-            "type" : "string"
-          },
-          "text" : {
-            "type" : "string"
-          }
+          "type" : "string"
         },
         "example" : {
           "en" : "Hello!",
