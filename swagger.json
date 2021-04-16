@@ -55,10 +55,7 @@
           "description" : "Get all resources mathing property dictionary",
           "required" : false,
           "schema" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "$ref" : "#/components/schemas/Props"
-            }
+            "$ref" : "#/components/schemas/Props"
           }
         }, {
           "name" : "intersect",
@@ -215,10 +212,7 @@
             "example" : "2021-04-17"
           },
           "properties" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "$ref" : "#/components/schemas/Props"
-            }
+            "$ref" : "#/components/schemas/Props"
           },
           "area" : {
             "$ref" : "#/components/schemas/Polygon"
