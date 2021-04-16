@@ -68,7 +68,7 @@
           "schema" : {
             "type" : "object",
             "additionalProperties" : {
-              "$ref" : "#/components/schemas/Area"
+              "$ref" : "#/components/schemas/Polygon"
             }
           }
         }, {
@@ -79,7 +79,7 @@
           "schema" : {
             "type" : "object",
             "additionalProperties" : {
-              "$ref" : "#/components/schemas/Area"
+              "$ref" : "#/components/schemas/Polygon"
             }
           }
         } ],
@@ -193,12 +193,12 @@
             "type" : "string"
           },
           "integer_value" : {
-            "type" : "integer"
+            "type" : "number"
           }
         },
         "example" : {
           "a_string_value" : "Hello!",
-          "an_integer_value" : 1111
+          "an_number_value" : 1111.222
         }
       },
       "Area" : {
