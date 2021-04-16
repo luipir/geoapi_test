@@ -57,7 +57,7 @@
           "schema" : {
             "type" : "object",
             "additionalProperties" : {
-              "$ref" : "#/components/schemas/Props"
+              "type" : "string"
             }
           }
         }, {
@@ -186,16 +186,6 @@
   },
   "components" : {
     "schemas" : {
-      "Props" : {
-        "type" : "object",
-        "properties" : {
-          "type" : "string"
-        },
-        "example" : {
-          "en" : "Hello!",
-          "fr" : "Bonjour!"
-        }
-      },
       "Area" : {
         "type" : "object",
         "required" : [ "name", "date", "properties", "area" ],
