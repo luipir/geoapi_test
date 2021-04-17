@@ -240,12 +240,17 @@
         "description" : "WGS-84 longitude-latitude and height above sea-level"
       },
       "Polygon" : {
+        "type" : "object",
         "description" : "A list of points representing a closed shape . the First point is connected to the last to close the shape. a shape must contain at least three points.",
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Point"
-        },
-        "minItems" : 3
+        "properties" : {
+          "polygon" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Point"
+            },
+            "minItems" : 3
+          }
+        }
       }
     }
   }
