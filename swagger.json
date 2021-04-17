@@ -47,6 +47,7 @@
           "in" : "query",
           "description" : "Get all resources containing the name",
           "required" : false,
+          "allowEmptyValue" : true,
           "schema" : {
             "type" : "string",
             "format" : "date",
