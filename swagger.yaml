@@ -229,6 +229,8 @@ components:
       maxItems: 3
       items:
         type: number
+      example:
+        [-8.226312, 43.29702, 77]
 
     Polygon:
       type: array

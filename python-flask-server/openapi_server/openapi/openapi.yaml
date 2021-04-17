@@ -245,8 +245,12 @@ components:
       example:
         date: 2021-04-17T00:00:00.000+0000
         area:
-        - null
-        - null
+        - - -8.226312
+          - 43.29702
+          - 77
+        - - -8.226312
+          - 43.29702
+          - 77
         name: Luigi Pirelli
         properties:
           a_string_value: Hello!
@@ -276,6 +280,10 @@ components:
       type: object
     Point3D:
       description: Point in 3D space
+      example:
+      - -8.226312
+      - 43.29702
+      - 77
       items:
         type: number
       maxItems: 3
