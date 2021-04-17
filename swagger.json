@@ -65,7 +65,6 @@
           "in" : "query",
           "description" : "Get all resources intersecting query Area and ordered from larget to smallest",
           "required" : false,
-          "minProperties" : 0,
           "content" : {
             "application/json" : {
               "schema" : {
