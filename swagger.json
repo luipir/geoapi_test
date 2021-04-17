@@ -42,6 +42,16 @@
             "type" : "string",
             "example" : "look_for_this_name"
           }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "Get all resources containing the name",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date",
+            "example" : "2021-04-17"
+          }
         } ],
         "responses" : {
           "200" : {
