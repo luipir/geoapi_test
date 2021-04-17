@@ -42,42 +42,6 @@
             "type" : "string",
             "example" : "look_for_this_name"
           }
-        }, {
-          "name" : "date",
-          "in" : "query",
-          "description" : "Get all resources containing the name",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "format" : "date",
-            "example" : "2021-04-17"
-          }
-        }, {
-          "name" : "properties",
-          "in" : "query",
-          "description" : "Get all resources mathing property dictionary",
-          "required" : false,
-          "schema" : {
-            "$ref" : "#/components/schemas/Props"
-          }
-        }, {
-          "name" : "intersect",
-          "in" : "query",
-          "description" : "Get all resources intersecting query Area and ordered from larget to smallest",
-          "required" : false,
-          "allowEmptyValue" : true,
-          "schema" : {
-            "$ref" : "#/components/schemas/Polygon"
-          }
-        }, {
-          "name" : "intersection",
-          "in" : "query",
-          "description" : "Get all resources intersection with query Area. No order is espected",
-          "required" : false,
-          "allowEmptyValue" : true,
-          "schema" : {
-            "$ref" : "#/components/schemas/Polygon"
-          }
         } ],
         "responses" : {
           "200" : {
