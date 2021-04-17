@@ -65,24 +65,16 @@
           "in" : "query",
           "description" : "Get all resources intersecting query Area and ordered from larget to smallest",
           "required" : false,
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Polygon"
-              }
-            }
+          "schema" : {
+            "$ref" : "#/components/schemas/Polygon"
           }
         }, {
           "name" : "intersection",
           "in" : "query",
           "description" : "Get all resources intersection with query Area. No order is espected",
           "required" : false,
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Polygon"
-              }
-            }
+          "schema" : {
+            "$ref" : "#/components/schemas/Polygon"
           }
         } ],
         "responses" : {
