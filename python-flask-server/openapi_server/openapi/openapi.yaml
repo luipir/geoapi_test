@@ -1,0 +1,290 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: luipir@gmail.com
+  description: geo_test API as RESTFul service to offer basic geo services
+  license:
+    name: Creative Common CC-BY-SA
+    url: https://creativecommons.org/licenses/by-sa/4.0/
+  title: GEO_Test API
+  version: 1.0.0
+servers:
+- description: Simple RESTful service of geo data
+  url: https://localhost:8080/luipir/geo_test/1.0.0
+tags:
+- description: Api to manage resource CRUD
+  name: crud
+- description: Api to manage resources search
+  name: search
+paths:
+  /areas:
+    post:
+      description: |
+        Add a new Area resource or modify existing if unique name already exist
+      operationId: add_area
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Area'
+        description: Area resource to add/substitute
+      responses:
+        "204":
+          description: The resource was created/substited successfully.
+      summary: Add new/modify Area resource
+      tags:
+      - crud
+      x-openapi-router-controller: openapi_server.controllers.crud_controller
+  /areas/intersect:
+    post:
+      description: "Retrieve intersecting Area resources \n"
+      operationId: get_intersected
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Polygon'
+        description: Polygon to retrieve intersecting Area resources
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Retrieve a Area inteersecting posted polygon.
+      tags:
+      - crud
+      x-openapi-router-controller: openapi_server.controllers.crud_controller
+  /areas/intersection:
+    post:
+      description: |
+        Retrieve Area inside input polygon
+      operationId: get_intersection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Polygon'
+        description: Polygon to retrieve inner Area resources
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Retrieve Area inside input polygon.
+      tags:
+      - crud
+      x-openapi-router-controller: openapi_server.controllers.crud_controller
+  /areas/properties:
+    post:
+      description: |
+        Retrieve a Area resource by properties dict.
+      operationId: get_area_by_properties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Props'
+        description: Area to retrieve with matching properties
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Retrieve a Area with a specified data set of properties.
+      tags:
+      - crud
+      x-openapi-router-controller: openapi_server.controllers.crud_controller
+  /areas/{date}:
+    get:
+      description: |
+        Retrieve a Area resource by date.
+      operationId: get_area_by_date
+      parameters:
+      - description: Get all resources containing the name
+        explode: false
+        in: path
+        name: date
+        required: true
+        schema:
+          description: Custom date
+          example: 2021-01-30
+          pattern: ^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Retrieve a Area with a specified data.
+      tags:
+      - crud
+      x-openapi-router-controller: openapi_server.controllers.crud_controller
+  /areas/{name}:
+    delete:
+      description: |
+        Delete a Area resource by name.
+      operationId: delete_are_by_name
+      parameters:
+      - description: resource unique name
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: The resource was deleted successfully.
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Delete a Area resource by name.
+      tags:
+      - search
+      x-openapi-router-controller: openapi_server.controllers.search_controller
+    get:
+      description: |
+        Retrieve a Area resource by unique name.
+      operationId: get_area_by_name
+      parameters:
+      - description: resource unique name
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Retrieve a Area resource by unique name.
+      tags:
+      - crud
+      x-openapi-router-controller: openapi_server.controllers.crud_controller
+components:
+  responses:
+    "200Success":
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: '#/components/schemas/Area'
+            type: array
+      description: Operation success
+    "400badInput":
+      description: bad input parameter
+    "404NoResource":
+      description: No resource found
+  schemas:
+    Props:
+      example:
+        a_string_value: Hello!
+        an_number_value: 1111.222
+      properties:
+        string_value:
+          type: string
+        integer_value:
+          type: number
+      title: Props
+      type: object
+    Area:
+      example:
+        date: 2021-04-17T00:00:00.000+0000
+        area:
+        - null
+        - null
+        name: Luigi Pirelli
+        properties:
+          a_string_value: Hello!
+          an_number_value: 1111.222
+      properties:
+        name:
+          example: Luigi Pirelli
+          type: string
+        date:
+          example: 2021-04-17
+          format: date
+          type: string
+        properties:
+          $ref: '#/components/schemas/Props'
+        area:
+          description: Polygon not closed coordinates.
+          items:
+            $ref: '#/components/schemas/Point3D'
+          minItems: 3
+          type: array
+      required:
+      - area
+      - date
+      - name
+      - properties
+      title: Area
+      type: object
+    Point3D:
+      description: Point in 3D space
+      items:
+        type: number
+      maxItems: 3
+      minItems: 2
+      title: Point3D
+      type: array
+    Polygon:
+      description: Polygon not closed coordinates.
+      items:
+        $ref: '#/components/schemas/Point3D'
+      minItems: 3
+      type: array
