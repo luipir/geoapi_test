@@ -13,8 +13,8 @@ servers:
     # url: https://virtserver.swaggerhub.com/luipir/geo_test/1.0.0
     url: https://localhost:8080/luipir/geo_test/1.0.0
 tags:
- - name: crud
-   description: Api to manage resource CRUD
+ - name: modification
+   description: Api to manage resource modification
  - name: search
    description: Api to manage resources search
 
@@ -23,7 +23,7 @@ paths:
   /areas:
     post:
       tags:
-        - crud
+        - modification
       summary: Add new/modify Area resource
       operationId: addArea
       description: |
@@ -48,7 +48,7 @@ paths:
           type: string
     get:
       tags:
-        - crud
+        - search
       summary: Retrieve a Area resource by unique name.
       operationId: getAreaByName
       description: |
@@ -62,7 +62,7 @@ paths:
           $ref: '#/components/responses/404NoResource'
     delete:
       tags:
-        - search
+        - modification
       summary: Delete a Area resource by name.
       operationId: deleteAreByName
       description: |
@@ -90,7 +90,7 @@ paths:
         example: "2021-01-30"
     get:
       tags:
-        - crud
+        - search
       summary: Retrieve a Area with a specified data.
       operationId: getAreaByDate
       description: |
@@ -106,7 +106,7 @@ paths:
   /areas/properties:
     post:
       tags:
-        - crud
+        - search
       summary: Retrieve a Area with a specified data set of properties.
       operationId: getAreaByProperties
       description: |
@@ -128,7 +128,7 @@ paths:
   /areas/intersect:
     post:
       tags:
-        - crud
+        - search
       summary: Retrieve a Area inteersecting posted polygon.
       operationId: getIntersected
       description: |
@@ -150,7 +150,7 @@ paths:
   /areas/intersection:
     post:
       tags:
-        - crud
+        - search
       summary: Retrieve Area inside input polygon.
       operationId: getIntersection
       description: |
