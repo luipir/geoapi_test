@@ -5,7 +5,6 @@ import unittest
 import sys
 from flask import json
 from six import BytesIO
-from operator import eq
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.test import BaseTestCase
@@ -102,10 +101,7 @@ class TestModificationController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-        # areas = getAreas()
         self.assertEqual(len(areas), 1)
-
-
 
 
 if __name__ == '__main__':
