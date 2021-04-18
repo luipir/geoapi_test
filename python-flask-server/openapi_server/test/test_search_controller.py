@@ -8,7 +8,6 @@ from six import BytesIO
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
-from openapi_server.models.props import Props  # noqa: E501
 from openapi_server.test import BaseTestCase
 
 
@@ -52,7 +51,7 @@ class TestSearchController(BaseTestCase):
         """
         props = {
   "a_string_value" : "Hello!",
-  "an_number_value" : 1111.222
+  "an_number_value" : "1111.222"
 }
         headers = { 
             'Accept': 'application/json',
