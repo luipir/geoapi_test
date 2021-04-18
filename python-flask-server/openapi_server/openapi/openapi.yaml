@@ -35,10 +35,44 @@ paths:
       tags:
       - modification
       x-openapi-router-controller: openapi_server.controllers.modification_controller
+  /areas/date/{date}:
+    get:
+      description: |
+        Retrieve a Area resource by date.
+      operationId: get_area_by_date
+      parameters:
+      - description: Get all resources containing the name
+        explode: false
+        in: path
+        name: date
+        required: true
+        schema:
+          description: Custom date
+          example: 2021-01-30
+          pattern: ^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Area'
+                type: array
+          description: Operation success
+        "400":
+          description: bad input parameter
+        "404":
+          description: No resource found
+      summary: Retrieve a Area with a specified data.
+      tags:
+      - search
+      x-openapi-router-controller: openapi_server.controllers.search_controller
   /areas/intersect:
     post:
       description: "Retrieve intersecting Area resources \n"
-      operationId: get_intersected
+      operationId: get_intersect
       requestBody:
         content:
           application/json:
@@ -115,40 +149,6 @@ paths:
         "404":
           description: No resource found
       summary: Retrieve a Area with a specified data set of properties.
-      tags:
-      - search
-      x-openapi-router-controller: openapi_server.controllers.search_controller
-  /areas/{date}:
-    get:
-      description: |
-        Retrieve a Area resource by date.
-      operationId: get_area_by_date
-      parameters:
-      - description: Get all resources containing the name
-        explode: false
-        in: path
-        name: date
-        required: true
-        schema:
-          description: Custom date
-          example: 2021-01-30
-          pattern: ^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Area'
-                type: array
-          description: Operation success
-        "400":
-          description: bad input parameter
-        "404":
-          description: No resource found
-      summary: Retrieve a Area with a specified data.
       tags:
       - search
       x-openapi-router-controller: openapi_server.controllers.search_controller
@@ -241,18 +241,55 @@ components:
           type: number
       title: Props
       type: object
+    Point3DDict:
+      description: Point in 3D space
+      example:
+        lat: 43.29702
+        lon: -8.226312
+        altitude: 77
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        altitude:
+          type: number
+      required:
+      - lat
+      - lon
+      title: Point3DDict
+      type: object
+    Polygon:
+      description: Polygon not closed coordinates.
+      example:
+      - lat: 43.29702
+        lon: -8.226312
+        altitude: 77
+      - lat: 43.29702
+        lon: -8.226312
+        altitude: 77
+      - lat: 43.29702
+        lon: -8.226312
+        altitude: 77
+      items:
+        $ref: '#/components/schemas/Point3DDict'
+      minItems: 3
+      type: array
     Area:
       example:
-        date: 2021-04-17T00:00:00.000+0000
-        area:
-        - - -8.226312
-          - 43.29702
-          - 77
-        - - -8.226312
-          - 43.29702
-          - 77
+        date: 2021-04-17
         name: Luigi Pirelli
-        properties:
+        poly:
+        - lat: 43.29702
+          lon: -8.226312
+          altitude: 77
+        - lat: 43.29702
+          lon: -8.226312
+          altitude: 77
+        - lat: 43.29702
+          lon: -8.226312
+          altitude: 77
+        props:
           a_string_value: Hello!
           an_number_value: 1111.222
       properties:
@@ -260,39 +297,32 @@ components:
           example: Luigi Pirelli
           type: string
         date:
+          description: Custom date
           example: 2021-04-17
-          format: date
+          pattern: ^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$
           type: string
-        properties:
+        props:
           $ref: '#/components/schemas/Props'
-        area:
+        poly:
           description: Polygon not closed coordinates.
+          example:
+          - lat: 43.29702
+            lon: -8.226312
+            altitude: 77
+          - lat: 43.29702
+            lon: -8.226312
+            altitude: 77
+          - lat: 43.29702
+            lon: -8.226312
+            altitude: 77
           items:
-            $ref: '#/components/schemas/Point3D'
+            $ref: '#/components/schemas/Point3DDict'
           minItems: 3
           type: array
       required:
-      - area
       - date
       - name
-      - properties
+      - poly
+      - props
       title: Area
       type: object
-    Point3D:
-      description: Point in 3D space
-      example:
-      - -8.226312
-      - 43.29702
-      - 77
-      items:
-        type: number
-      maxItems: 3
-      minItems: 2
-      title: Point3D
-      type: array
-    Polygon:
-      description: Polygon not closed coordinates.
-      items:
-        $ref: '#/components/schemas/Point3D'
-      minItems: 3
-      type: array

@@ -2,6 +2,7 @@ import connexion
 import six
 
 from openapi_server.models.area import Area  # noqa: E501
+from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
 from openapi_server.models.props import Props  # noqa: E501
 from openapi_server import util
 
@@ -47,27 +48,31 @@ def get_area_by_properties(props=None):  # noqa: E501
     return 'do some magic!'
 
 
-def get_intersected(request_body=None):  # noqa: E501
+def get_intersect(point3_d_dict=None):  # noqa: E501
     """Retrieve a Area inteersecting posted polygon.
 
     Retrieve intersecting Area resources   # noqa: E501
 
-    :param request_body: Polygon to retrieve intersecting Area resources
-    :type request_body: List[]
+    :param point3_d_dict: Polygon to retrieve intersecting Area resources
+    :type point3_d_dict: list | bytes
 
     :rtype: List[Area]
     """
+    if connexion.request.is_json:
+        point3_d_dict = [Point3DDict.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
     return 'do some magic!'
 
 
-def get_intersection(request_body=None):  # noqa: E501
+def get_intersection(point3_d_dict=None):  # noqa: E501
     """Retrieve Area inside input polygon.
 
     Retrieve Area inside input polygon  # noqa: E501
 
-    :param request_body: Polygon to retrieve inner Area resources
-    :type request_body: List[]
+    :param point3_d_dict: Polygon to retrieve inner Area resources
+    :type point3_d_dict: list | bytes
 
     :rtype: List[Area]
     """
+    if connexion.request.is_json:
+        point3_d_dict = [Point3DDict.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
     return 'do some magic!'

@@ -77,7 +77,7 @@ paths:
         '404':
           $ref: '#/components/responses/404NoResource'
 
-  /areas/{date}:
+  /areas/date/{date}:
     parameters:
     - name: date
       in: path
@@ -130,15 +130,15 @@ paths:
       tags:
         - search
       summary: Retrieve a Area inteersecting posted polygon.
-      operationId: getIntersected
+      operationId: getIntersect
       description: |
         Retrieve intersecting Area resources 
       requestBody:
+        description: Polygon to retrieve intersecting Area resources
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Polygon'
-        description: Polygon to retrieve intersecting Area resources
       responses:
         '200':
           $ref: '#/components/responses/200Success'
@@ -156,11 +156,11 @@ paths:
       description: |
         Retrieve Area inside input polygon
       requestBody:
+        description: Polygon to retrieve inner Area resources
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Polygon'
-        description: Polygon to retrieve inner Area resources
       responses:
         '200':
           $ref: '#/components/responses/200Success'
@@ -168,8 +168,6 @@ paths:
           $ref: '#/components/responses/400badInput'
         '404':
           $ref: '#/components/responses/404NoResource'
-
-
 
 components:
 
@@ -191,50 +189,95 @@ components:
 
   schemas:
 
-    Props:
+    'Props':
       type: object
       properties:
-        string_value:
+        'string_value':
           type: string
-        integer_value:
+        'integer_value':
           type: number
       example:
         a_string_value: Hello!
         an_number_value: 1111.222
 
-    Area:
+    #############################33
+    # this definition using array of array create issue in swagger codegeneration
+    # deserialiseing the list => the reason to use Point·D as dict
+    #############################33
+    # 'Point3D':
+    #   type: array
+    #   description: Point in 3D space
+    #   minItems: 2
+    #   maxItems: 3
+    #   items:
+    #     type: number
+    #   example:
+    #     [-8.226312, 43.29702, 77]
+
+    # 'Polygon':
+    #   type: object
+    #   description: Polygon not closed coordinates.
+    #   # required:
+    #   # - polygon
+    #   properties:
+    #     'polygon':
+    #       type: array
+    #       description: points compoing the polygon
+    #       minItems: 3
+    #       items:
+    #         $ref: '#/components/schemas/Point3D'
+    #   example:
+    #     {"polygon": [
+    #       [-8.226312, 43.29702, 77],
+    #       [-8.226312, 43.29702, 77],
+    #       [-8.226312, 43.29702, 77]
+    #     ]}
+
+    'Point3DDict':
+      type: object
+      description: Point in 3D space
+      required:
+      - 'lat'
+      - 'lon'
+      properties:
+        'lat':
+          type: number
+        'lon':
+          type: number
+        'altitude':
+          type: number
+      example:
+        {'lat': 43.29702, 'lon': -8.226312, 'altitude': 77}
+
+    'Polygon':
+      type: array
+      description: Polygon not closed coordinates.
+      minItems: 3
+      items:
+        $ref: '#/components/schemas/Point3DDict'
+      example:
+        [{'lat': 43.29702, 'lon': -8.226312, 'altitude': 77}, {'lat': 43.29702, 'lon': -8.226312, 'altitude': 77}, {'lat': 43.29702, 'lon': -8.226312, 'altitude': 77}]
+      # example:
+      #   [[-8.226312, 43.29702, 77], [-8.226312, 43.29702, 77], [-8.226312, 43.29702, 77]]
+
+    'Area':
       type: object
       required:
         - name
         - date
-        - properties
-        - area
+        - props
+        - poly
       properties:
-        name:
+        'name':
           type: string
           example: Luigi Pirelli
-        date:
+        'date':
           type: string
-          format: date
-          example: '2021-04-17'
-        properties:
+          pattern: '^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'
+          description: Custom date 
+          example: "2021-04-17"
+        'props':
           $ref: '#/components/schemas/Props'
-        area:
+        'poly':
           $ref: '#/components/schemas/Polygon'
 
-    Point3D:
-      type: array
-      description: Point in 3D space
-      minItems: 2
-      maxItems: 3
-      items:
-        type: number
-      example:
-        [-8.226312, 43.29702, 77]
-
-    Polygon:
-      type: array
-      description: Polygon not closed coordinates.
-      items:
-        $ref: '#/components/schemas/Point3D'
-      minItems: 3

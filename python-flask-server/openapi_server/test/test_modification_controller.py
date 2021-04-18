@@ -19,10 +19,22 @@ class TestModificationController(BaseTestCase):
         Add new/modify Area resource
         """
         area = {
-  "date" : "2021-04-17T00:00:00.000+0000",
-  "area" : [ [ -8.226312, 43.29702, 77 ], [ -8.226312, 43.29702, 77 ] ],
+  "date" : "2021-04-17",
   "name" : "Luigi Pirelli",
-  "properties" : {
+  "poly" : [ {
+    "lat" : 43.29702,
+    "lon" : -8.226312,
+    "altitude" : 77
+  }, {
+    "lat" : 43.29702,
+    "lon" : -8.226312,
+    "altitude" : 77
+  }, {
+    "lat" : 43.29702,
+    "lon" : -8.226312,
+    "altitude" : 77
+  } ],
+  "props" : {
     "a_string_value" : "Hello!",
     "an_number_value" : 1111.222
   }
