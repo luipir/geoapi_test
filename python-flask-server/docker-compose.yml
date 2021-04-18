@@ -1,0 +1,33 @@
+# Docker compose GEOAPI_TEST
+#
+# Required .env:
+#
+# Author:  Luigi Pirelli
+# Date:    2021-04-18
+# License: GPL3
+
+version: '3'
+services:
+
+    geoapi_test:
+        image: geoapi_test:latest
+        build:
+          context: .
+          dockerfile: Dockerfile
+        restart: always
+        ports:
+            - "8080:8080"
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "10"
+        volumes:
+            - ${PWD}/openapi_server:/usr/src/app/openapi_server
+            # - ${VAPI_DOCKER_SHARED_VOLUME}:/shared-volume
+            # # Mount some useful paths to be able to tweak the container
+            # # without rebuilding it
+            # - ./vapi/:/code/vapi/
+            # - ./docker/vapi/settings_local.py:/code/vapi/vapiproject/settings_local.py
+            # - ./docker/vapi/entrypoint.sh:/code/docker/vapi/entrypoint.sh
+
