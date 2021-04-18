@@ -231,15 +231,11 @@ components:
       description: No resource found
   schemas:
     Props:
+      additionalProperties:
+        type: string
       example:
         a_string_value: Hello!
-        an_number_value: 1111.222
-      properties:
-        string_value:
-          type: string
-        integer_value:
-          type: number
-      title: Props
+        an_number_value: "1111.222"
       type: object
     Point3DDict:
       description: Point in 3D space
@@ -291,7 +287,7 @@ components:
           altitude: 77
         props:
           a_string_value: Hello!
-          an_number_value: 1111.222
+          an_number_value: "1111.222"
       properties:
         name:
           example: Luigi Pirelli
@@ -302,7 +298,12 @@ components:
           pattern: ^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$
           type: string
         props:
-          $ref: '#/components/schemas/Props'
+          additionalProperties:
+            type: string
+          example:
+            a_string_value: Hello!
+            an_number_value: "1111.222"
+          type: object
         poly:
           description: Polygon not closed coordinates.
           example:
