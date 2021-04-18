@@ -45,4 +45,4 @@ def delete_are_by_name(name):  # noqa: E501
     areas = getAreas()
     areas.pop(name, None)
 
-    return 'do some magic!'
+    return areas

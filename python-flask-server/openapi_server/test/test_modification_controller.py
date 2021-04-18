@@ -5,6 +5,7 @@ import unittest
 import sys
 from flask import json
 from six import BytesIO
+import json
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.test import BaseTestCase
@@ -80,7 +81,6 @@ class TestModificationController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-        # areas = getAreas()
         self.assertEqual(len(areas), 0)
 
     def test_delete_are_by_not_existent_name(self):
@@ -101,7 +101,13 @@ class TestModificationController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+        # no chenges
         self.assertEqual(len(areas), 1)
+
+        # check return is the same areas stored
+        returned_area = json.loads(response.data.decode('utf-8'))
+        for key in returned_area.keys():
+            self.assertEqual(areas[key].to_dict(), returned_area[key])
 
 
 if __name__ == '__main__':
