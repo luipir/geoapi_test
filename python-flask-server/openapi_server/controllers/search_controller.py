@@ -5,6 +5,7 @@ import sys
 from http import HTTPStatus
 
 from flask import abort
+from shapely import geometry
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
@@ -82,8 +83,13 @@ def get_intersect(point3_d_dict=None):  # noqa: E501
     """
     if connexion.request.is_json:
         point3_d_dict = [Point3DDict.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
-        
-    return 'do some magic!'
+
+    # build shaply polygon basing on input point list
+    poly = geometry.Polygon([[p.lon, p.lat, p.altitude] for p in point3_d_dict])
+
+    print('***************************************', point3_d_dict, poly, file=sys.stdout)
+
+    return point3_d_dict, HTTPStatus.NOT_FOUND
 
 
 def get_intersection(point3_d_dict=None):  # noqa: E501
