@@ -5,7 +5,7 @@ import logging
 # from shapely.geometry import Polygon
 
 from openapi_server.models.area import Area  # noqa: E501
-from openapi_server.data.areas import areas  # noqa: E501
+from openapi_server.data.areas import getAreas, setAreas  # noqa: E501
 from openapi_server import util
 
 log = logging.getLogger(__name__)
@@ -24,8 +24,10 @@ def add_area(area=None):  # noqa: E501
         area = Area.from_dict(connexion.request.get_json())  # noqa: E501
 
         log.debug('Storing area: {}'.format(area))
+        areas = getAreas()
         areas[area.name] = area
-        # log.info(areas)
+        setAreas(areas)
+        # log.debug("Stored areas: {}".format(areas[area['name']].name))
 
     return 'magic done!'
 
@@ -40,4 +42,7 @@ def delete_are_by_name(name):  # noqa: E501
 
     :rtype: List[Area]
     """
+    areas = getAreas()
+    areas.pop(name, None)
+
     return 'do some magic!'
