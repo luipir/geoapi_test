@@ -89,9 +89,6 @@ class TestSearchController(BaseTestCase):
                 "key2" : "value4"
             }
         }
-        headers = { 
-            'Content-Type': 'application/json',
-        }
         response = self.client.open(
             '/luipir/geo_test/1.0.0/areas',
             method='POST',
@@ -126,9 +123,6 @@ class TestSearchController(BaseTestCase):
         self.assertEqual(len(areas), 2)
 
         # step 2
-        headers = { 
-            'Accept': 'application/json',
-        }
         response = self.client.open(
             '/luipir/geo_test/1.0.0/areas/date/{date}'.format(date='2021-04-18'),
             method='GET',
@@ -169,9 +163,6 @@ class TestSearchController(BaseTestCase):
         self.assertEqual(len(areas), 2)
 
         # step 2
-        headers = { 
-            'Accept': 'application/json',
-        }
         response = self.client.open(
             '/luipir/geo_test/1.0.0/areas/{name}'.format(name='Luigi Pirelli'),
             method='GET',
@@ -179,9 +170,6 @@ class TestSearchController(BaseTestCase):
         self.assert200(response,'Response body is : ' + response.data.decode('utf-8'))
 
         # check when more than one key containing a search name =>
-        headers = { 
-            'Accept': 'application/json',
-        }
         response = self.client.open(
             '/luipir/geo_test/1.0.0/areas/{name}'.format(name='Luigi'),
             method='GET',
@@ -229,14 +217,6 @@ class TestSearchController(BaseTestCase):
         self.assertEqual(len(areas), 2)
 
         # step 2
-        props = {
-            "key1": "value1",
-            "key2": "value2"
-        }
-        headers = { 
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
         response = self.client.open(
             '/luipir/geo_test/1.0.0/areas/properties',
             method='POST',
@@ -253,10 +233,6 @@ class TestSearchController(BaseTestCase):
         props = {
             "key1": "value1111",
             "key2": "value2222"
-        }
-        headers = { 
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
         }
         response = self.client.open(
             '/luipir/geo_test/1.0.0/areas/properties',
@@ -364,20 +340,28 @@ class TestSearchController(BaseTestCase):
 
         Retrieve Area inside input polygon.
         """
-        polygon = [ {
-            "lat" : 43.29702,   
-            "lon" : -8.226312,
-            "altitude" : 77
+        # equal to the first Area
+        polygon = [
+            {
+                "lat" : 0,
+                "lon" : 0,
+                "altitude" : 0
             }, {
-                "lat" : 43.29702,
-                "lon" : -8.226312,
-                "altitude" : 77
+                "lat" : 2,
+                "lon" : 0,
+                "altitude" : 1
             }, {
-                "lat" : 43.29702,
-                "lon" : -8.226312,
-                "altitude" : 77
-            } 
+                "lat" : 2,
+                "lon" : 2,
+                "altitude" : 2
+            }, {
+                "lat" : 0,
+                "lon" : 2,
+                "altitude" : 3
+            }
         ]
+
+        # first not found because no elements is stores
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -388,8 +372,59 @@ class TestSearchController(BaseTestCase):
             headers=headers,
             data=json.dumps(polygon),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
+
+        # check when name exist exist =>
+
+        # step1) add an entries
+        # step2) check if I can get the entry via api
+        # step3) check if nothing is found but something is stored
+        self._addAreas()
+        areas = getAreas()
+        self.assertEqual(len(areas), 2)
+
+        # step 2 - should get the the first Area
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/intersection',
+            method='POST',
+            headers=headers,
+            data=json.dumps(polygon),
+            content_type='application/json')
+        self.assert200(response,'Response body is : ' + response.data.decode('utf-8'))
+
+        result_areas = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(len(result_areas), 1)
+        self.assertEqual(result_areas[0]['name'], 'Luigi Pirelli')
+
+        # step 3: set a polygon that do not intersect
+        polygon = [ {
+            "lat" : 4,
+            "lon" : 4,
+            "altitude" : 1
+            }, 
+            {
+                "lat" : 5,
+                "lon" : 4,
+                "altitude" : 2
+            },
+            {
+                "lat" : 5,
+                "lon" : 5,
+                "altitude" : 3
+            },
+            {
+                "lat" : 4,
+                "lon" : 5,
+                "altitude" : 4
+            } 
+        ]
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/intersection',
+            method='POST',
+            headers=headers,
+            data=json.dumps(polygon),
+            content_type='application/json')
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
 
 
 if __name__ == '__main__':

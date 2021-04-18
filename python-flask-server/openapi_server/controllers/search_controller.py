@@ -120,4 +120,27 @@ def get_intersection(point3_d_dict=None):  # noqa: E501
     """
     if connexion.request.is_json:
         point3_d_dict = [Point3DDict.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
-    return 'do some magic!'
+
+    # build shaply polygon basing on input point list
+    poly = geometry.Polygon([[p.lon, p.lat, p.altitude] for p in point3_d_dict])
+
+    # select all Areas intersecting input polygon
+    areas = getAreas()
+    results = []
+
+    # loop on every feature but should use a spatial db to avoid this iteration 
+    # and use spatial index
+    for key, area in areas.items():
+        # creat polygon from area coordinates
+        area_polygon = geometry.Polygon([[p.lon, p.lat, p.altitude] for p in area.poly])
+
+        # not clear if have to return Areas contained in the input polygon or 
+        # return intersected ones modifing Poly of each Area with the intersection.
+        # I choose to most (for me) logical solution e.g. contains operator
+        if poly.contains(area_polygon):
+            results.append(area)
+    
+    if len(results) == 0:
+        abort(HTTPStatus.NOT_FOUND)
+
+    return results, HTTPStatus.OK
