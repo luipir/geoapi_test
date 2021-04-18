@@ -23,7 +23,12 @@ def get_area_by_date(date):  # noqa: E501
 
     :rtype: List[Area]
     """
-    return 'do some magic!'
+    areas = getAreas()
+    result = [val for key, val in areas.items() if date == val.date]
+    if len(result) == 0:
+        abort(HTTPStatus.NOT_FOUND)
+
+    return result, HTTPStatus.OK
 
 
 def get_area_by_name(name):  # noqa: E501

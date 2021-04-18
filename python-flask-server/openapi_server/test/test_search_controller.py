@@ -95,15 +95,43 @@ class TestSearchController(BaseTestCase):
 
         Retrieve a Area with a specified data.
         """
+        # check when date does not exist
         headers = { 
             'Accept': 'application/json',
         }
         response = self.client.open(
-            '/luipir/geo_test/1.0.0/areas/date/{date}'.format(date='2021-01-30'),
+            '/luipir/geo_test/1.0.0/areas/date/{date}'.format(date='9999-12-31'),
             method='GET',
             headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
+
+        # check when date exist
+
+        # step1) add an entries
+        # step2) check if I can get the entry via api
+        
+        # step 1
+        self._addAreas()
+        areas = getAreas()
+        self.assertEqual(len(areas), 2)
+
+        # step 2
+        headers = { 
+            'Accept': 'application/json',
+        }
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/date/{date}'.format(date='2021-04-18'),
+            method='GET',
+            headers=headers)
+        self.assert200(response,'Response body is : ' + response.data.decode('utf-8'))
+
+        result_areas = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(len(result_areas), 1)
+        
+        areas = getAreas()
+        for area in result_areas:
+            name = area['name']
+            self.assertEqual(areas[name].to_dict(), area)
 
     def test_get_area_by_name(self):
         """Test case for get_area_by_name
@@ -122,7 +150,7 @@ class TestSearchController(BaseTestCase):
 
         # check when name exist exist =>
 
-        # step1) add an entry
+        # step1) add an entries
         # step2) check if I can get the entry via api
         
         # step 1
@@ -130,6 +158,7 @@ class TestSearchController(BaseTestCase):
         areas = getAreas()
         self.assertEqual(len(areas), 2)
 
+        # step 2
         headers = { 
             'Accept': 'application/json',
         }
