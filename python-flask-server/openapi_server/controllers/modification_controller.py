@@ -1,12 +1,13 @@
 import connexion
 import six
 import logging
+from flask import abort
+from http import HTTPStatus
 
 # from shapely.geometry import Polygon
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.data.areas import getAreas, setAreas  # noqa: E501
-from openapi_server import util
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def add_area(area=None):  # noqa: E501
         setAreas(areas)
         # log.debug("Stored areas: {}".format(areas[area['name']].name))
 
-    return 'magic done!'
+    return None, HTTPStatus.NO_CONTENT
 
 
 def delete_are_by_name(name):  # noqa: E501
@@ -43,6 +44,7 @@ def delete_are_by_name(name):  # noqa: E501
     :rtype: List[Area]
     """
     areas = getAreas()
-    areas.pop(name, None)
+    if areas.pop(name, None) is None:
+        abort(HTTPStatus.NOT_FOUND)
 
-    return areas
+    return areas, HTTPStatus.OK

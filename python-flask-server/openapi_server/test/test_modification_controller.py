@@ -6,6 +6,7 @@ import sys
 from flask import json
 from six import BytesIO
 import json
+from http import HTTPStatus
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.test import BaseTestCase
@@ -54,12 +55,13 @@ class TestModificationController(BaseTestCase):
             headers=headers,
             data=json.dumps(area),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, HTTPStatus.NO_CONTENT, 'Response body is : ' + response.data.decode('utf-8'))
 
         self.assertEqual(len(areas), 1)
         self.assertTrue(area['name'] in areas.keys())
         self.assertEqual(areas[area['name']].to_dict(), area)
+
+        return None
 
     def test_delete_are_by_name(self):
         """Test case for delete_are_by_name
@@ -98,16 +100,12 @@ class TestModificationController(BaseTestCase):
             '/luipir/geo_test/1.0.0/areas/{name}'.format(name='a not existent name'),
             method='DELETE',
             headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
+        # self.assert200(response,
+        #                'Response body is : ' + response.data.decode('utf-8'))
 
         # no chenges
         self.assertEqual(len(areas), 1)
-
-        # check return is the same areas stored
-        returned_area = json.loads(response.data.decode('utf-8'))
-        for key in returned_area.keys():
-            self.assertEqual(areas[key].to_dict(), returned_area[key])
 
 
 if __name__ == '__main__':
