@@ -11,7 +11,8 @@ from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
 from openapi_server import util
 from openapi_server.data.areas import getAreas  # noqa: E501
- 
+
+
 log = logging.getLogger(__name__)
 
 def get_area_by_date(date):  # noqa: E501
@@ -87,9 +88,24 @@ def get_intersect(point3_d_dict=None):  # noqa: E501
     # build shaply polygon basing on input point list
     poly = geometry.Polygon([[p.lon, p.lat, p.altitude] for p in point3_d_dict])
 
-    print('***************************************', point3_d_dict, poly, file=sys.stdout)
+    # select all Areas intersecting input polygon
+    areas = getAreas()
+    results = []
 
-    return point3_d_dict, HTTPStatus.NOT_FOUND
+    # loop on every feature but should use a spatial db to avoid this iteration 
+    # and use spatial index
+    for key, area in areas.items():
+        # creat polygon from area coordinates
+        area_polygon = geometry.Polygon([[p.lon, p.lat, p.altitude] for p in area.poly])
+
+        # check if intersect
+        if poly.intersects(area_polygon):
+            results.append(area)
+    
+    if len(results) == 0:
+        abort(HTTPStatus.NOT_FOUND)
+
+    return results, HTTPStatus.OK
 
 
 def get_intersection(point3_d_dict=None):  # noqa: E501

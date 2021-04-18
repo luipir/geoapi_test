@@ -10,6 +10,8 @@ from http import HTTPStatus
 from flask import json
 from six import BytesIO
 
+import shapely
+
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
 from openapi_server.test import BaseTestCase
@@ -194,7 +196,6 @@ class TestSearchController(BaseTestCase):
             name = area['name']
             self.assertEqual(areas[name].to_dict(), area)
 
-
     def test_get_area_by_properties(self):
         """Test case for get_area_by_properties
 
@@ -242,7 +243,6 @@ class TestSearchController(BaseTestCase):
             headers=headers,
             data=json.dumps(props),
             content_type='application/json')
-        self.assertStatus(response, HTTPStatus.OK, 'Response body is : ' + response.data.decode('utf-8'))
         self.assert200(response,'Response body is : ' + response.data.decode('utf-8'))
 
         result_areas = json.loads(response.data.decode('utf-8'))
@@ -272,19 +272,28 @@ class TestSearchController(BaseTestCase):
         Retrieve a Area inteersecting posted polygon.
         """
         polygon = [ {
-            "lat" : 43.29702,   
-            "lon" : -8.226312,
-            "altitude" : 77
-            }, {
-                "lat" : 43.29702,
-                "lon" : -8.226312,
-                "altitude" : 77
-            }, {
-                "lat" : 43.29702,
-                "lon" : -8.226312,
-                "altitude" : 77
+            "lat" : 1,   
+            "lon" : 1,
+            "altitude" : 1
+            }, 
+            {
+                "lat" : 2,
+                "lon" : 1,
+                "altitude" : 2
+            },
+            {
+                "lat" : 2,
+                "lon" : 2,
+                "altitude" : 3
+            },
+            {
+                "lat" : 1,
+                "lon" : 2,
+                "altitude" : 4
             } 
         ]
+
+        # first not found because no elements is stores
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -295,8 +304,60 @@ class TestSearchController(BaseTestCase):
             headers=headers,
             data=json.dumps(polygon),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
+
+        # check when name exist exist =>
+
+        # step1) add an entries
+        # step2) check if I can get the entry via api
+        # step3) check if nothing is found but something is stored
+        self._addAreas()
+        areas = getAreas()
+        self.assertEqual(len(areas), 2)
+
+        # step 2 - should get the two feature
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/intersect',
+            method='POST',
+            headers=headers,
+            data=json.dumps(polygon),
+            content_type='application/json')
+        self.assert200(response,'Response body is : ' + response.data.decode('utf-8'))
+
+        result_areas = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(len(result_areas), 2)
+        self.assertEqual(result_areas[0]['name'], 'Luigi Pirelli')
+        self.assertEqual(result_areas[1]['name'], 'Luigi Pipolo')
+
+        # step 3: set a polygon that do not intersect
+        polygon = [ {
+            "lat" : 4,
+            "lon" : 4,
+            "altitude" : 1
+            }, 
+            {
+                "lat" : 5,
+                "lon" : 4,
+                "altitude" : 2
+            },
+            {
+                "lat" : 5,
+                "lon" : 5,
+                "altitude" : 3
+            },
+            {
+                "lat" : 4,
+                "lon" : 5,
+                "altitude" : 4
+            } 
+        ]
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/intersect',
+            method='POST',
+            headers=headers,
+            data=json.dumps(polygon),
+            content_type='application/json')
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
 
     def test_get_intersection(self):
         """Test case for get_intersection
