@@ -30,21 +30,25 @@ class TestSearchController(BaseTestCase):
             "date" : "2021-04-17",
             "name" : "Luigi Pirelli",
             "poly" : [ {
-                "lat" : 43.111,
-                "lon" : -8.111,
-                "altitude" : 77.1
+                "lat" : 0,
+                "lon" : 0,
+                "altitude" : 0
             }, {
-                "lat" : 43.222,
-                "lon" : -8.222,
-                "altitude" : 77.2
+                "lat" : 2,
+                "lon" : 0,
+                "altitude" : 1
             }, {
-                "lat" : 43.333,
-                "lon" : -8.333,
-                "altitude" : 77.3
+                "lat" : 2,
+                "lon" : 2,
+                "altitude" : 2
+            }, {
+                "lat" : 0,
+                "lon" : 2,
+                "altitude" : 3
             } ],
             "props" : {
-                "a_string_value" : "Hello!",
-                "an_number_value" : "1111.222"
+                "key1" : "value1",
+                "key2" : "value2"
             }
         }
         headers = { 
@@ -62,21 +66,25 @@ class TestSearchController(BaseTestCase):
             "date" : "2021-04-18",
             "name" : "Luigi Pipolo",
             "poly" : [ {
-                "lat" : 43.111,
-                "lon" : -8.111,
-                "altitude" : 77.1
+                "lat" : 1,
+                "lon" : 1,
+                "altitude" : 0
             }, {
-                "lat" : 43.222,
-                "lon" : -8.222,
-                "altitude" : 77.2
+                "lat" : 3,
+                "lon" : 1,
+                "altitude" : 1
             }, {
-                "lat" : 43.333,
-                "lon" : -8.333,
-                "altitude" : 77.3
+                "lat" : 3,
+                "lon" : 3,
+                "altitude" : 2
+            }, {
+                "lat" : 1,
+                "lon" : 3,
+                "altitude" : 3
             } ],
             "props" : {
-                "a_string_value" : "Hello!",
-                "an_number_value" : "1111.222"
+                "key1" : "value3",
+                "key2" : "value4"
             }
         }
         headers = { 
