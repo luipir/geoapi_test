@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import
 import unittest
+import logging
+import sys
 
 from flask import json
 from six import BytesIO
@@ -10,6 +12,7 @@ from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
 from openapi_server.test import BaseTestCase
 
+log = logging.getLogger(__name__)
 
 class TestSearchController(BaseTestCase):
     """SearchController integration test stubs"""
