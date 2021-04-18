@@ -7,12 +7,10 @@ from typing import List, Dict  # noqa: F401
 
 from openapi_server.models.base_model_ import Model
 from openapi_server.models.point3_d_dict import Point3DDict
-from openapi_server.models.props import Props
 import re
 from openapi_server import util
 
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
-from openapi_server.models.props import Props  # noqa: E501
 import re  # noqa: E501
 
 class Area(Model):
@@ -29,14 +27,14 @@ class Area(Model):
         :param date: The date of this Area.  # noqa: E501
         :type date: str
         :param props: The props of this Area.  # noqa: E501
-        :type props: Props
+        :type props: Dict[str, str]
         :param poly: The poly of this Area.  # noqa: E501
         :type poly: List[Point3DDict]
         """
         self.openapi_types = {
             'name': str,
             'date': str,
-            'props': Props,
+            'props': Dict[str, str],
             'poly': List[Point3DDict]
         }
 
@@ -119,7 +117,7 @@ class Area(Model):
 
 
         :return: The props of this Area.
-        :rtype: Props
+        :rtype: Dict[str, str]
         """
         return self._props
 
@@ -129,7 +127,7 @@ class Area(Model):
 
 
         :param props: The props of this Area.
-        :type props: Props
+        :type props: Dict[str, str]
         """
         if props is None:
             raise ValueError("Invalid value for `props`, must not be `None`")  # noqa: E501
