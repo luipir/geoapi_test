@@ -26,26 +26,26 @@ class TestModificationController(BaseTestCase):
         self.assertEqual(len(areas), 0)
 
         area = {
-  "date" : "2021-04-17",
-  "name" : "Luigi Pirelli",
-  "poly" : [ {
-    "lat" : 43.111,
-    "lon" : -8.111,
-    "altitude" : 77.1
-  }, {
-    "lat" : 43.222,
-    "lon" : -8.222,
-    "altitude" : 77.2
-  }, {
-    "lat" : 43.333,
-    "lon" : -8.333,
-    "altitude" : 77.3
-  } ],
-  "props" : {
-    "a_string_value" : "Hello!",
-    "an_number_value" : "1111.222"
-  }
-}
+            "date" : "2021-04-17",
+            "name" : "Luigi Pirelli",
+            "poly" : [ {
+                "lat" : 43.111,
+                "lon" : -8.111,
+                "altitude" : 77.1
+            }, {
+                "lat" : 43.222,
+                "lon" : -8.222,
+                "altitude" : 77.2
+            }, {
+                "lat" : 43.333,
+                "lon" : -8.333,
+                "altitude" : 77.3
+            } ],
+            "props" : {
+                "a_string_value" : "Hello!",
+                "an_number_value" : "1111.222"
+            }
+        }
         headers = { 
             'Content-Type': 'application/json',
         }
@@ -80,8 +80,7 @@ class TestModificationController(BaseTestCase):
             '/luipir/geo_test/1.0.0/areas/{name}'.format(name='Luigi Pirelli'),
             method='DELETE',
             headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assert200(response, 'Response body is : ' + response.data.decode('utf-8'))
 
         self.assertEqual(len(areas), 0)
 
@@ -101,8 +100,6 @@ class TestModificationController(BaseTestCase):
             method='DELETE',
             headers=headers)
         self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
-        # self.assert200(response,
-        #                'Response body is : ' + response.data.decode('utf-8'))
 
         # no chenges
         self.assertEqual(len(areas), 1)
