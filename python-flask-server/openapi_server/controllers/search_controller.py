@@ -59,7 +59,15 @@ def get_area_by_properties(request_body=None):  # noqa: E501
 
     :rtype: List[Area]
     """
-    return 'do some magic!'
+    if connexion.request.is_json:
+        props = connexion.request.get_json()  # noqa: E501
+
+    areas = getAreas()
+    results = [val for key, val in areas.items() if props == val.props]
+    if len(results) == 0:
+        abort(HTTPStatus.NOT_FOUND)
+
+    return results, HTTPStatus.OK
 
 
 def get_intersect(point3_d_dict=None):  # noqa: E501
@@ -74,6 +82,7 @@ def get_intersect(point3_d_dict=None):  # noqa: E501
     """
     if connexion.request.is_json:
         point3_d_dict = [Point3DDict.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
+        
     return 'do some magic!'
 
 

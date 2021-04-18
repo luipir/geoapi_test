@@ -201,9 +201,9 @@ class TestSearchController(BaseTestCase):
         Retrieve a Area with a specified data set of properties.
         """
         props = {
-  "a_string_value" : "Hello!",
-  "an_number_value" : "1111.222"
-}
+            "key1": "value1",
+            "key2": "value2"
+        }
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -214,8 +214,57 @@ class TestSearchController(BaseTestCase):
             headers=headers,
             data=json.dumps(props),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
+
+        # check when name exist exist =>
+
+        # step1) add an entries
+        # step2) check if I can get the entry via api
+        # step3) check if nothing is found but something is stored
+        
+        # step 1
+        self._addAreas()
+        areas = getAreas()
+        self.assertEqual(len(areas), 2)
+
+        # step 2
+        props = {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        headers = { 
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/properties',
+            method='POST',
+            headers=headers,
+            data=json.dumps(props),
+            content_type='application/json')
+        self.assertStatus(response, HTTPStatus.OK, 'Response body is : ' + response.data.decode('utf-8'))
+        self.assert200(response,'Response body is : ' + response.data.decode('utf-8'))
+
+        result_areas = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(len(result_areas), 1)
+        self.assertEqual(result_areas[0]['name'], 'Luigi Pirelli')
+
+        # step 3
+        props = {
+            "key1": "value1111",
+            "key2": "value2222"
+        }
+        headers = { 
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        response = self.client.open(
+            '/luipir/geo_test/1.0.0/areas/properties',
+            method='POST',
+            headers=headers,
+            data=json.dumps(props),
+            content_type='application/json')
+        self.assertStatus(response, HTTPStatus.NOT_FOUND, 'Response body is : ' + response.data.decode('utf-8'))
 
     def test_get_intersect(self):
         """Test case for get_intersect
