@@ -191,14 +191,12 @@ components:
 
     'Props':
       type: object
-      properties:
-        'string_value':
-          type: string
-        'integer_value':
-          type: number
+      additionalProperties:
+        # can add other type 'anyOf' clouse generate codegen error: No module named 'openapi_server.models.any_ofstringnumber
+        type: string
       example:
-        a_string_value: Hello!
-        an_number_value: 1111.222
+        a_string_value: "Hello!"
+        an_number_value: "1111.222"
 
     #############################33
     # this definition using array of array create issue in swagger codegeneration
