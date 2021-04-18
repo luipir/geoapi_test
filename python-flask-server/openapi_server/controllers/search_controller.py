@@ -1,6 +1,10 @@
 import connexion
 import six
 import logging
+import sys
+from http import HTTPStatus
+
+from flask import abort
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
@@ -33,10 +37,11 @@ def get_area_by_name(name):  # noqa: E501
     :rtype: List[Area]
     """
     areas = getAreas()
-    matched_keys = [val for key, val in areas.items() if name in key]
-    results = [areas[key] for key in matched_keys]
-    log.debug('Matched: {}'.format(results))
-    return 'do some magic!'
+    results = [val for key, val in areas.items() if name in key]
+    if len(results) == 0:
+        abort(HTTPStatus.NOT_FOUND)
+
+    return results, HTTPStatus.OK
 
 
 def get_area_by_properties(request_body=None):  # noqa: E501
