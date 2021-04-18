@@ -1,11 +1,14 @@
 import connexion
 import six
+import logging
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.models.point3_d_dict import Point3DDict  # noqa: E501
 from openapi_server.models.props import Props  # noqa: E501
 from openapi_server import util
+from openapi_server.data.areas import areas  # noqa: E501
 
+log = logging.getLogger(__name__)
 
 def get_area_by_date(date):  # noqa: E501
     """Retrieve a Area with a specified data.
@@ -30,6 +33,9 @@ def get_area_by_name(name):  # noqa: E501
 
     :rtype: List[Area]
     """
+    # matched_keys = [val for key, val in areas.items() if name in key]
+    # results = [areas[key] for key in matched_keys]
+    # log.debug('Matched: {}'.format(results))
     return 'do some magic!'
 
 

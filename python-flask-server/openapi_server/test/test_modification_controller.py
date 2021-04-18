@@ -8,6 +8,7 @@ from six import BytesIO
 
 from openapi_server.models.area import Area  # noqa: E501
 from openapi_server.test import BaseTestCase
+from openapi_server.data.areas import areas  # noqa: E501
 
 
 class TestModificationController(BaseTestCase):
@@ -18,6 +19,9 @@ class TestModificationController(BaseTestCase):
 
         Add new/modify Area resource
         """
+        # reset area
+        self.assertEqual(len(areas), 0)
+
         area = {
   "date" : "2021-04-17",
   "name" : "Luigi Pirelli",
@@ -50,6 +54,10 @@ class TestModificationController(BaseTestCase):
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+
+        self.assertEqual(len(areas), 1)
+        self.assertTrue(area['name'] in areas.keys())
+        self.assertEqual(areas[area['name']], area)
 
     def test_delete_are_by_name(self):
         """Test case for delete_are_by_name
