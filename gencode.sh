@@ -4,7 +4,7 @@ if [ $? -eq 1 ]; then
 	exit
 fi
 pushd .
-cd ../../python-flask-server
+cd python-flask-server
 docker build -t swagger_server:latest .
 pushd
 docker rm --force swagger_server
