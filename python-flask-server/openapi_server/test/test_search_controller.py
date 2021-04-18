@@ -151,6 +151,11 @@ class TestSearchController(BaseTestCase):
 
         result_areas = json.loads(response.data.decode('utf-8'))
         self.assertEqual(len(result_areas), 2)
+        
+        areas = getAreas()
+        for area in result_areas:
+            name = area['name']
+            self.assertEqual(areas[name].to_dict(), area)
 
 
     def test_get_area_by_properties(self):
