@@ -27,6 +27,17 @@ requirements: Need **libgeos** installed due to Shapely.
     (openapi_venv) $> pip3 install tox
     (openapi_venv) $> tox
 
+## How to run unit tests
+
+    $> cd geoapi_test/python-flask-server
+    $> virtualenv -p `which python3` openapi_venv
+    $> source ./openapi_venv/bin/activate
+    (openapi_venv) $> pip3 install -r requirements.txt
+    (openapi_venv) $> pip3 install -r test-requirements.txt
+    (openapi_venv) $> pip3 install tox
+    (openapi_venv) $> tox
+
+
 ## How I developed it
 
 I decided to create the scheleton of all api and relative empty tests using **openapi-generator** basing on api specification in a swagger.yml:
